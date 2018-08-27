@@ -18,20 +18,21 @@ public class OpenCVTest {
 
     public static void main(String[] args) {
        Mat src = loadImage(RESOURCES_INVOICE_JPEG);
-       Mat srcHistogram = equalizeHistogram(src, createDestinationFromSource(src));
-       Mat adaptiveThreshold = adaptiveThreshold(srcHistogram, createDestinationFromSource(srcHistogram));
-       Mat denoiseImage = deleteNoise(adaptiveThreshold, createDestinationFromSource(adaptiveThreshold));
+
+       Mat adaptiveThreshold = adaptiveThreshold(src, createDestinationFromSource(src));
+       Mat srcHistogram = equalizeHistogram(adaptiveThreshold, createDestinationFromSource(adaptiveThreshold));
+       Mat denoiseImage = deleteNoise(srcHistogram, createDestinationFromSource(srcHistogram));
 
        writeImage(denoiseImage, RESOURCES_RESULT_JPEG);
     }
 
     public static Mat deleteNoise(Mat src, Mat dst) {
-        Photo.fastNlMeansDenoising(src, dst,50,7,21);
+        Photo.fastNlMeansDenoising(src, dst,50,5,15);
         return dst;
     }
 
     public static Mat adaptiveThreshold(Mat src, Mat dst) {
-        Imgproc.adaptiveThreshold(src, dst, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 15, 40);
+        Imgproc.adaptiveThreshold(src, dst, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 15, 40);
         return dst;
     }
 
